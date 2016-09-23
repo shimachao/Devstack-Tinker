@@ -17,8 +17,8 @@ sudo pip install pyopenssl ndg-httpsclient pyasn1
 echo "USER ALL=(ALL)NOPASSWD:ALL" | sudo tee -a /etc/sudoers
 
 cd ~
-git clone https://github.com/openstack-dev/devstack -b stable/kilo
-git clone https://github.com/cmusatyalab/elijah-openstack
+git clone https://git.oschina.net/shimachao/devstack.git -b stable/kilo
+git clone https://git.oschina.net/shimachao/elijah-openstack.git
 
 cd devstack
 git checkout stable/kilo
