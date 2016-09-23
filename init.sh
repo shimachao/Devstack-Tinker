@@ -1,7 +1,7 @@
-sudo cat ./sources.list > /etc/apt/sources.list
+sudo sh -c 'cat ./sources.list > /etc/apt/sources.list'
 sudo apt-get update
 
-mkdir ~/.pip/
+mkdir ~/.pip
 cp ./pip.conf ~/.pip/pip.conf
 sudo mkdir /root/.pip
 sudo cp ~/pip.conf /root/.pip/pip.conf
