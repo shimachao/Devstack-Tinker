@@ -2,9 +2,9 @@ sudo sh -c 'cat ./xidian-14.04-sources.list > /etc/apt/sources.list'
 sudo apt-get update
 
 mkdir ~/.pip
-cp ./xidian-pip.conf ~/.pip/pip.conf
+cp ./douban-pip.conf ~/.pip/pip.conf
 sudo mkdir /root/.pip
-sudo cp ./xidian-pip.conf /root/.pip/pip.conf
+sudo cp ./douban-pip.conf /root/.pip/pip.conf
 
 sudo apt-get -y install python-pip python3-pip python-setuptools python3-setuptools git vim openssh-server fabric
 
