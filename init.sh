@@ -1,5 +1,6 @@
 sudo sh -c 'cat ./xidian-14.04-sources.list > /etc/apt/sources.list'
 sudo apt-get update
+sudo apt-get -y upgrade
 
 mkdir ~/.pip
 cp ./douban-pip.conf ~/.pip/pip.conf
