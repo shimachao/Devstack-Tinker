@@ -83,7 +83,7 @@ sudo pip install --upgrade os-testr
 ```shell
 ~$ cd ~
 ~$ git clone https://github.com/cmusatyalab/elijah-provisioning
-~$ git clone https://github.com/openstack-dev/devstack
+~$ git clone -b stable/kilo https://github.com/openstack-dev/devstack
 ~$ git clone https://github.com/cmusatyalab/elijah-openstack
 ```
 本人将上面上个源码仓库备份到国内网站上。如果以上下载地址失效或网速有问题，你也可以到本人下面的备份地址下载：
