@@ -142,7 +142,7 @@ sudo pip install --upgrade os-testr
 
 ## 安装 OpenStack
 OpenStack 的安装是整个过程中最复杂的一步。必须的严格按照步骤来。
- 
+
 ### 修改安装脚本
 ```shell
  ~$ cd ~
@@ -274,7 +274,7 @@ SPICE_REPO=http://git.trystack.cn/git/spice/spice-html5.git
 >GLANCE_HOSTPORT=192.168.100.12:9292  
 
 这里主机 IP 设置，和各个服务的 IP 设置。我安装时的主机 IP 为 192.168.100.12，所以我填的是 192.168.100.12。你必须都将其改成你在局域网中为主机所分配的 IP 就行（前面准备工作中让你给电脑主机分配一个固定的 IP 地址正是此意）。
- 
+
  #### 固定 IP 和浮动 IP
 >FLOATING_RANGE="192.168.100.0/24"  
 >FIXED_RANGE="10.0.0.0/24"  
@@ -318,4 +318,44 @@ OpenStack 中的固定 IP 是分配给虚拟机的私网 IP，只能用于虚拟
 ~$ echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 ~$ ./stack.sh
 ```
-如果安装顺利，最后会输出两个用户账号和密码。
+安装过程中会输出大量的日志信息。可以根据日志信息判断哪个阶段出了问题。如果顺利，最后会输出两个用户账号和密码。类似如下：
+```
+This is your host ip: 192.168.100.10
+Horizon is now available at http://192.168.100.10/
+Keystone is serving at http://192.168.100.10:5000/
+The default users are: admin and demo
+The password: pass
+```
+可以看到，创建了两个账户 admin 和 demo，密码就是我们之前在 local.conf 配置文件中设置的密码。
+
+### 安装后的验证
+
+#### stack 会话
+
+通过 DevStack 部署好 OpenStack后，DevStack 会创建一个名为stack的 screen 会话，将 OpenStack 所有的服务进程放到该会话中管理。下面我们来验证一下这个会话。
+
+```shell
+$ screen -ls
+There is a screen on:
+	4215.stack	(2016年9月30日 19时51分26秒)	(Detached)
+1 Socket in /var/run/screen/S-chao.
+```
+
+可以看出 DevStack 创建了一个名为 stack 的 screen 会话。我们在看看具体的 stack 会话.
+
+```shell
+$ screen -r stack
+```
+
+![stack screen](./screenshot/stack-screen.png)
+
+#### Web 界面
+OpenStack 可以通过 Web 界面来访问和管理。我们打开看一下。
+
+打开浏览器，在地址栏输入主机 IP 地址，然后点回车。会出现 OpenStack 的登录界面。
+![web](./screenshot/web.png)
+
+输入用户名和密码（前面安装脚本的输出）。点击 **Sign in**。出现如下界面：
+![log in](./screenshot/log-in.png)
+
+如果你的验证结果和上面的一样，说明 OpenStack 已安装成功。
