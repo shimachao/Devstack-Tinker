@@ -21,7 +21,7 @@
 由于安装过程中需要到 Ubuntu 软件仓库下载大量的软件包，Ubuntu 系统默认的软件源在国外，往往会因为网速问题而导致失败。所以我们可以将 Ubuntu 的软件源替换为国内源。如果你所在的局域网环境搭建好了自己的 Ubuntu 源就更好了。我所在的环境离西电开源社区的软件源更近，所以下面以西电开源社区的源为例来说明。
 编辑 /etc/apt/sources.list
 ```shell
-~$ sudo gedit /etc/apt/sources.list
+$ sudo gedit /etc/apt/sources.list
 ```
 将 /etc/apt/sources.list 中的内容替换为下面的西电开源社区的源地址：
 ```
@@ -41,17 +41,17 @@ deb-src http://ftp.xdlinux.info/ubuntu/ trusty-backports main restricted univers
 2. 同步软件源并更新系统
 
 ```
-~$ sudo apt-get update
-~$ sudo apt-get -y upgrade
+$ sudo apt-get update
+$ sudo apt-get -y upgrade
 ```
 
 3. 修改 pip 源
 
 OpenStack 安装过程中同样会下载大量 Python 包，同样由于网络问题，我们需要将 Python 的 pip 源替换为国内源。如果你所在的网络环境有自己的 pip 源就更好了。如果你在清华就使用清华的 pip 源，如果你在中科大就使用中科大的 pip 源。没有就建议使用豆瓣的 pip 源。我所在的环境没有好的 pip 源，所以就选择了豆瓣的 pip 源。下面是豆瓣的 pip 源为例说。
 ```shell
-~$ cd ~
-~$ mkdir .pip
-~$ gedit .pip/pip.conf
+$ cd ~
+$ mkdir .pip
+$ gedit .pip/pip.conf
 ```
 在 .pip/pip.conf 中填入下面的豆瓣源地址：
 ```
@@ -65,33 +65,33 @@ trusted-host = pypi.douban.com
 4. 安装或升级必要的软件包
 
 ```
-~$ sudo apt-get -y install python-pip python3-pip python-setuptools python3-setuptools git vim openssh-server fabric dos2unix
+$ sudo apt-get -y install python-pip python3-pip python-setuptools python3-setuptools git vim openssh-server fabric dos2unix
 ```
 升级 pip
 ```shell
-sudo pip install --upgrade pip
-sudo pip3 install --upgrade pip
-sudo pip install --upgrade os-testr
+$ sudo pip install --upgrade pip
+$ sudo pip3 install --upgrade pip
+$ sudo pip install --upgrade os-testr
 ```
 ```shell
-~$ sudo pip install pyopenssl ndg-httpsclient pyasn1
+$ sudo pip install pyopenssl ndg-httpsclient pyasn1
 ```
 以上这些软件包大多是 Cloudlet 文档要求的，还有一些是本人多次安装过程中遇到错误总结出来的。
 
 ## 下载 Cloudlet 和 OpenStack 软件源码并备份
 ### 下载
 ```shell
-~$ cd ~
-~$ git clone https://github.com/cmusatyalab/elijah-provisioning
-~$ git clone -b stable/kilo https://github.com/openstack-dev/devstack
-~$ git clone https://github.com/cmusatyalab/elijah-openstack
+$ cd ~
+$ git clone https://github.com/cmusatyalab/elijah-provisioning
+$ git clone -b stable/kilo https://github.com/openstack-dev/devstack
+$ git clone https://github.com/cmusatyalab/elijah-openstack
 ```
 本人将上面上个源码仓库备份到国内网站上。如果以上下载地址失效或网速有问题，你也可以到本人下面的备份地址下载：
 ```shell
-~$ cd ~
-~$ git clone https://git.oschina.net/shimachao/elijah-provisioning.git
-~$ git clone -b stable/kilo https://git.oschina.net/shimachao/devstack.git
-~$ git clone https://git.oschina.net/shimachao/elijah-openstack.git
+$ cd ~
+$ git clone https://git.oschina.net/shimachao/elijah-provisioning.git
+$ git clone -b stable/kilo https://git.oschina.net/shimachao/devstack.git
+$ git clone https://git.oschina.net/shimachao/elijah-openstack.git
 ```
 第一个 elijah-provisioning 源码仓库包含和 BaseVM 相关的一些工具和 Cloudlet 用到的库。
 
@@ -103,10 +103,10 @@ sudo pip install --upgrade os-testr
 
 由于 OpenStack 可能会安装失败，你可能会多次重装，所以建议你将上面下载的源码仓库备份起来，方便后面重装时使用。假设你的外接存储介质（U 盘或移动硬盘）在系统上的挂载路径为 /path/to/you/u，在存储介质上创建一个目录 cloudlet_backup。开始备份。
 ```shell
-~$ cd /path/to/you/u/cloudlet_backup/
-~$ git clone ~/elijah-provisioning
-~$ git clone ~/devstack
-~$ git clone ~/elijah-openstack
+$ cd /path/to/you/u/cloudlet_backup/
+$ git clone ~/elijah-provisioning
+$ git clone ~/devstack
+$ git clone ~/elijah-openstack
 ```
 以后重装时就不需要从网上下载源码包了，直接从外接存储介质中备份目录 git clone 就行。
 
@@ -115,28 +115,28 @@ sudo pip install --upgrade os-testr
 
 ### 修改 fabfile.py 脚本
 ```shell
-~$ cd ~
-~$ cd elijah-provisioning
-~$ gedit fabfile.py
+$ cd ~
+$ cd elijah-provisioning
+$ gedit fabfile.py
 ```
 将 fabfile.py 文件中的第 93~95 行、98 行注释掉。这几行是用 wget 命令下载一个安装包，但这个下载过程特别漫长，很容易因为超时出错。所以我们将其注释掉，改为手动下载。复杂第 93 行的链接地址，粘贴到流浪器中，将得到一个下载文件。将这个下载到的文件重命名为 python-xdelta3.deb，保存到 ~/elijah-provisioning 目录下面。建议你将这个文件备份一下，万一重装的时候可以再使用。
 
 ### 修改 setup.py 脚本
 ```shell
-~$ gedit setup.py
+$ gedit setup.py
 ```
 将 setup.py 的第 48 行注释掉。这一行是在下载一个镜像文件，但速度特别慢，容易出错，所以我们将其改为手动下载。复杂第 35 行代码中的链接地址，粘贴到浏览器中下载。将得到一个名为 qemu-system-x86\_64 的文件。将其改名为 cloudlet\_qemu-system-x86\_64，复制到目录 ~/elijah-provisioning/elijah/provisioning/lib/bin/x86-64/ 下面。同样建议将此文件备份一下。
 
 ### 运行安装脚本
 ```shell
-~$ cd ~
-~$ cd elijah-provisioning
-~$ fab install
+$ cd ~
+$ cd elijah-provisioning
+$ fab install
 ```
 
 ### 验证
 ```shell
- ~$ cloudlet list-base
+ $ cloudlet list-base
 ```
 如果输出 hash value、path 类似的字眼，说明安装成功。如果提示未找到相应的命令行，说明安装失败，请重新安装。
 
@@ -145,9 +145,9 @@ OpenStack 的安装是整个过程中最复杂的一步。必须的严格按照�
 
 ### 修改安装脚本
 ```shell
- ~$ cd ~
- ~$ cd devstack
- ~$ gedit tools/install_pip.sh
+ $ cd ~
+ $ cd devstack
+ $ gedit tools/install_pip.sh
 ```
 将 tools/install_pip.sh 文件中的第 97 行、99 行、105 行注释掉。这几行是在升级 pip，速度特别慢，通常会出现超时错误，所以我们将其注释掉。而且 升级 pip 的事我们已经在前面的准备工作中做过了。
 
@@ -157,10 +157,10 @@ OpenStack 的安装是整个过程中最复杂的一步。必须的严格按照�
 
 DevStack 会默认将下载到的 OpenStack 源码包放在 /opt/stack 目录下。这里我们手动下载，所以需要自己手动创建目录。
 ```shell
-~$ cd /opt
-~$ sudo mkdir stack
-~$ chmod 755 stack
-~$ ls -l
+$ cd /opt
+$ sudo mkdir stack
+$ chmod 755 stack
+$ ls -l
 total 4
 drwxr-xr-x 2 root root 4096 10月  1 09:35 stack
 ```
@@ -170,18 +170,18 @@ drwxr-xr-x 2 root root 4096 10月  1 09:35 stack
 
 由于我们需要安装 OpenStack 的 kilo 版本，而官方代码仓库里已经删除了 kilo 分支的代码。所幸我们在国内的 CSDN 网站提供的代码托管平台上找到了 kilo 版本的代码。下面我们将从 code.csdn.net 下载源码。-b stable/kilo 表示我们要下载的是 kilo 分支的代码。
 ```shell
-~$ cd stack/
-~$ git clone -b stable/kilo https://code.csdn.net/openstack/nova.git
-~$ git clone -b stable/kilo https://code.csdn.net/openstack/cinder.git
-~$ git clone -b stable/kilo https://code.csdn.net/openstack/glance.git
-~$ git clone -b stable/kilo https://code.csdn.net/openstack/horizon.git
-~$ git clone -b stable/kilo https://code.csdn.net/openstack/neutron.git
-~$ git clone -b stable/kilo https://code.csdn.net/openstack/keystone.git
-~$ git clone -b stable/kilo https://code.csdn.net/openstack/requirements.git
+$ cd stack/
+$ git clone -b stable/kilo https://code.csdn.net/openstack/nova.git
+$ git clone -b stable/kilo https://code.csdn.net/openstack/cinder.git
+$ git clone -b stable/kilo https://code.csdn.net/openstack/glance.git
+$ git clone -b stable/kilo https://code.csdn.net/openstack/horizon.git
+$ git clone -b stable/kilo https://code.csdn.net/openstack/neutron.git
+$ git clone -b stable/kilo https://code.csdn.net/openstack/keystone.git
+$ git clone -b stable/kilo https://code.csdn.net/openstack/requirements.git
 ```
 除了 OpenStack 的源码，我们还需要下载一个 noVNC 的源码，用于在浏览器中访问虚拟机的界面。
 ```shell
-~$ git clone http://git.trystack.cn/kanaka/noVNC.git
+$ git clone http://git.trystack.cn/kanaka/noVNC.git
 ```
 按照下面的步骤下载完所有的源码后，同样建议将所有的源码备份一下。
 
@@ -189,8 +189,8 @@ drwxr-xr-x 2 root root 4096 10月  1 09:35 stack
 我们现在需要准备 DevStack 安装所使用的配置文件。这一步尤为重要，安装失败多半是这里出问题。
 在 devstack 目录下创建一个 local.conf 文件，在里面填入配置信息。
 ```shell
-~$ cd ~/devstack/
-~$ gedit local.conf
+$ cd ~/devstack/
+$ gedit local.conf
 ```
 在 local.conf 文件中填入以下内容，然后根据你的实际情况修改。
 ```shell
@@ -314,9 +314,9 @@ OpenStack 中的固定 IP 是分配给虚拟机的私网 IP，只能用于虚拟
 到这里，我们已经准备好了 local.conf 文件。开始正式安装。
 在安装之前务必要确认当前终端命令行所在的目录为 ~/devstack/，且网络畅通。
 ```shell
-~$ cd ~/devstack/
-~$ echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
-~$ ./stack.sh
+$ cd ~/devstack/
+$ echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
+$ ./stack.sh
 ```
 安装过程中会输出大量的日志信息。可以根据日志信息判断哪个阶段出了问题。如果顺利，最后会输出两个用户账号和密码。类似如下：
 ```
