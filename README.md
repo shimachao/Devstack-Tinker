@@ -73,6 +73,7 @@ $ sudo pip install --upgrade pip
 $ sudo pip3 install --upgrade pip
 $ sudo pip install --upgrade os-testr
 ```
+安装必要的 Python 包
 ```shell
 $ sudo pip install pyopenssl ndg-httpsclient pyasn1
 ```
