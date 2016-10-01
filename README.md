@@ -309,3 +309,13 @@ OpenStack 中的固定 IP 是分配给虚拟机的私网 IP，只能用于虚拟
 >#OFFLINE=True
 
 **OFFLINE** 用于设置离线模式。未完成安装之前将其注释掉就行。在安装完成后，如果你修改了配置，重新运行安装脚本时将 OFFLINE=True 前面的注释去掉，可以避免重复从网上下载已有的东西。
+
+### 运行安装脚本
+到这里，我们已经准备好了 local.conf 文件。开始正式安装。
+在安装之前务必要确认当前终端命令行所在的目录为 ~/devstack/，且网络畅通。
+```shell
+~$ cd ~/devstack/
+~$ echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
+~$ ./stack.sh
+```
+如果安装顺利，最后会输出两个用户账号和密码。
