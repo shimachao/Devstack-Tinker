@@ -359,3 +359,60 @@ OpenStack 可以通过 Web 界面来访问和管理。我们打开看一下。
 ![log in](./screenshot/log-in.png)
 
 如果你的验证结果和上面的一样，说明 OpenStack 已安装成功。
+
+
+## 安装 Cloudlet 扩展
+### 运行安装脚本
+安装好 OpenStack 后就可以安装 Cloudlet 扩展了。
+```shell
+$ cd ~/elijah-openstack
+$ fab localhost devstack_single_machine
+```
+输入用户密码，开始安装。
+
+安装完成后的输出如下所示：
+```
+[localhost] sudo: sed -i '/instances/ s/$/ "cloudlet",/' /opt/stack/horizon/openstack_dashboard/dashboards/project/dashboard.py
+[localhost] sudo: service apache2 restart
+[SUCCESS] Finished installation
+You should restart DevStack to activate changes!!
+  1. Terminate using unstack.sh
+  2. Restart using rejoin-stack.sh
+
+Done.
+Disconnecting from localhost... done.
+```
+
+### 重启 OpenStack
+Cloudlet 扩展安装完成后需要重启 OpenStack 才会生效。
+```shell
+$ cd ~/devstack/
+$ ./unstack.sh
+$ ./rejoin-stack.sh
+```
+unstack.sh 会停止所有和 OpenStack 相关的服务进程。rejoin-stack.sh 则会重新启动它们。
+根据我的经验，你还需要另开两个终端重启 apache2 和 keystone-all 服务
+```shell
+$ service apache2 start
+$ keystone-all
+```
+
+### 验证
+#### 检查 OpenStack 的状态
+```
+$ sudo nova-manage service list
+Binary           Host                                 Zone             Status     State Updated_At
+nova-conductor   chao-Y470                            internal         enabled    :-)   2016-09-25 12:41:07
+nova-cert        chao-Y470                            internal         enabled    :-)   2016-09-25 12:41:07
+nova-network     chao-Y470                            internal         enabled    :-)   2016-09-25 12:41:08
+nova-scheduler   chao-Y470                            internal         enabled    :-)   2016-09-25 12:41:07
+nova-consoleauth chao-Y470                            internal         enabled    :-)   2016-09-25 12:41:06
+nova-compute     chao-Y470                            nova             enabled    :-)   2016-09-25 12:41:08
+```
+根据输出信息，如果哪个服务没有启动，可以到 名为 stack 的 screen 会话查看对应的日志信息。
+
+#### 检查 Cloudlet 扩展是否安装成功
+再次打开浏览器，在地址栏输入本机 IP，回车。在弹出的 OpenStack 页面中输入账号和密码，登录。点击页面左侧的 project 面板，你将看到一个 Cloudlet 选项。如下图所示。
+![cloudlet 扩展](./screenshot/cloudlet.png)
+
+至此，我们的整个安装总算完成了。
