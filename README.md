@@ -1,4 +1,5 @@
 # 安装
+***
 安装 Cloudlet 需要先部署好 OpenStack，并在部署好的 OpenStack 上安装一个扩展。而部署 OpenStack 是一个复杂得过程，对电脑主机性能和网络环境都有一定的要求。
 
 ## 准备好硬件环境
@@ -283,28 +284,28 @@ SPICE_REPO=http://git.trystack.cn/git/spice/spice-html5.git
 
 OpenStack 中的固定 IP 是分配给虚拟机的私网 IP，只能用于虚拟机所在的私网使用，从虚拟机启动到关机一直不变。浮动 IP 是动态分配的，虚拟机用来访问外网所使用。
 
-FLOATING\_RANGE 用于设置浮动 IP 的范围，设置为你主机所在局域网的网段。比如我安装时主机所在的网段为 192.168.100.0/24。
+**FLOATING\_RANGE** 用于设置浮动 IP 的范围，设置为你主机所在局域网的网段。比如我安装时主机所在的网段为 192.168.100.0/24。
 
-Q\_FLOATING\_ALLOCATION\_POOL 是分配给虚拟机的浮动 IP 范围。在前面的准备工作中我们在局域网中预留一段 IP 范围给虚拟机，填到这里就行。比如我预留的浮动 IP 段为 192.168.100.200~192.168.100.254。
+**Q\_FLOATING\_ALLOCATION\_POOL** 是分配给虚拟机的浮动 IP 范围。在前面的准备工作中我们在局域网中预留一段 IP 范围给虚拟机，填到这里就行。比如我预留的浮动 IP 段为 192.168.100.200~192.168.100.254。
 
-FIXED_RANGE 是虚拟机固定 IP 的网段。设为 10.0.0.0/24 就行。
+**FIXED_RANGE** 是虚拟机固定 IP 的网段。设为 10.0.0.0/24 就行。
 
-PUBLIC\_NETWORK\_GATEWAY 是默认网关，即主机所在局域网的网关地址，通常是你主机所连接到的路由器或交换机的 IP 地址。比如本人主机连接到的路由器 IP 地址为 192.168.100.1，所以我将其设置为 192.168.100.1。如果你的路由器或交换机的 IP 地址为 192.168.100.2，你就将其设为 192.168.100.3。
+**PUBLIC\_NETWORK\_GATEWAY** 是默认网关，即主机所在局域网的网关地址，通常是你主机所连接到的路由器或交换机的 IP 地址。比如本人主机连接到的路由器 IP 地址为 192.168.100.1，所以我将其设置为 192.168.100.1。如果你的路由器或交换机的 IP 地址为 192.168.100.2，你就将其设为 192.168.100.3。
 
-PUBLIC_INTERFACE 是主机连接所在局域网时所使用的网卡，这里我使用的是 eth0。
+**PUBLIC_INTERFACE** 是主机连接所在局域网时所使用的网卡，这里我使用的是 eth0。
 
 #### 组件源码地址
 >GIT_BASE=https://code.csdn.net  
 >NOVNC_REPO=http://git.trystack.cn/kanaka/noVNC.git  
 >SPICE_REPO=http://git.trystack.cn/git/spice/spice-html5.git
 
-GIT_BASE 是 DevStack 下载 OpenStack 各组件源码的地址。虽然我们已经手动下载了各组件的源码，但为了以防还要下载其他源码，这里将下载地址设为国内的镜像地址。
+**GIT_BASE** 是 DevStack 下载 OpenStack 各组件源码的地址。虽然我们已经手动下载了各组件的源码，但为了以防还要下载其他源码，这里将下载地址设为国内的镜像地址。
 
-NOVNC\_REPO 是 noVNC 源码地址。
+**NOVNC\_REPO** 是 noVNC 源码地址。
 
-SPICE\_REPO 是 Horizon 组件所使用到的 spice 。
+**SPICE\_REPO** 是 Horizon 组件所使用到的 spice 。
 
 #### OFFLINE
 >#OFFLINE=True
 
-OFFLINE 用于设置离线模式。未完成安装之前将其注释掉就行。在安装完成后，如果你修改了配置，重新运行安装脚本时将 OFFLINE=True 前面的注释去掉，可以避免重复从网上下载已有的东西。
+**OFFLINE** 用于设置离线模式。未完成安装之前将其注释掉就行。在安装完成后，如果你修改了配置，重新运行安装脚本时将 OFFLINE=True 前面的注释去掉，可以避免重复从网上下载已有的东西。
