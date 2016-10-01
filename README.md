@@ -108,3 +108,33 @@ sudo pip install --upgrade os-testr
 ~$ git clone ~/elijah-openstack
 ```
 以后重装时就不需要从网上下载源码包了，直接从外接存储介质中备份目录 git clone 就行。
+
+## 安装 elijah-provisioning
+现在开始正式的安装过程。在安装 elijah-provisioning，我们需要修改一下安装脚本来加快安装速度，增加安装的成功率。一下工作都在 elijah-provisioning 目录下进行。
+
+### 修改 fabfile.py 脚本
+```shell
+~$ cd ~
+~$ cd elijah-provisioning
+~$ gedit fabfile.py
+```
+将 fabfile.py 文件中的第 93~95 行、98 行注释掉。这几行是用 wget 命令下载一个安装包，但这个下载过程特别漫长，很容易因为超时出错。所以我们将其注释掉，改为手动下载。复杂第 93 行的链接地址，粘贴到流浪器中，将得到一个下载文件。将这个下载到的文件重命名为 python-xdelta3.deb，保存到 ~/elijah-provisioning 目录下面。建议你将这个文件备份一下，万一重装的时候可以再使用。
+
+### 修改 setup.py 脚本
+```shell
+~$ gedit setup.py
+```
+将 setup.py 的第 48 行注释掉。这一行是在下载一个镜像文件，但速度特别慢，容易出错，所以我们将其改为手动下载。复杂第 35 行代码中的链接地址，粘贴到浏览器中下载。将得到一个名为 qemu-system-x86\_64 的文件。将其改名为 cloudlet\_qemu-system-x86\_64，复制到目录 ~/elijah-provisioning/elijah/provisioning/lib/bin/x86-64/ 下面。同样建议将此文件备份一下。
+
+### 运行安装脚本
+```shell
+~$ cd ~
+~$ cd elijah-provisioning
+~$ fab install
+```
+
+### 验证
+```shell
+ ~$ cloudlet list-base
+```
+如果输出 hash value、path 类似的字眼，说明安装成功。如果提示未找到相应的命令行，说明安装失败，请重新安装。
