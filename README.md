@@ -138,3 +138,121 @@ sudo pip install --upgrade os-testr
  ~$ cloudlet list-base
 ```
 如果输出 hash value、path 类似的字眼，说明安装成功。如果提示未找到相应的命令行，说明安装失败，请重新安装。
+
+## 安装 OpenStack
+OpenStack 的安装是整个过程中最复杂的一步。必须的严格按照步骤来。
+ 
+### 修改安装脚本
+```shell
+ ~$ cd ~
+ ~$ cd devstack
+ ~$ gedit tools/install_pip.sh
+```
+将 tools/install_pip.sh 文件中的第 97 行、99 行、105 行注释掉。这几行是在升级 pip，速度特别慢，通常会出现超时错误，所以我们将其注释掉。而且 升级 pip 的事我们已经在前面的准备工作中做过了。
+
+### 手动下载 OpenStack 各个组件的源码包
+虽然 DevStack 提供的安装脚本会自动下载 OpenStack 各个组件的源码包，但下载速度比较慢，我们手动下载并备份，以免以后重复下载。
+1. 创建目录
+
+DevStack 会默认将下载到的 OpenStack 源码包放在 /opt/stack 目录下。这里我们手动下载，所以需要自己手动创建目录。
+```shell
+~$ cd /opt
+~$ sudo mkdir stack
+~$ chmod 755 stack
+~$ ls -l
+total 4
+drwxr-xr-x 2 root root 4096 10月  1 09:35 stack
+```
+上面的命令创建了 /opt/stack 目录，并修改目录的权限，确保你的输出和上面类似。
+
+2. 下载 OpenStack 各个组件的源码包
+
+由于我们需要安装 OpenStack 的 kilo 版本，而官方代码仓库里已经删除了 kilo 分支的代码。所幸我们在国内的 CSDN 网站提供的代码托管平台上找到了 kilo 版本的代码。下面我们将从 code.csdn.net 下载源码。-b stable/kilo 表示我们要下载的是 kilo 分支的代码。
+```shell
+~$ cd stack/
+~$ git clone -b stable/kilo https://code.csdn.net/openstack/nova.git
+~$ git clone -b stable/kilo https://code.csdn.net/openstack/cinder.git
+~$ git clone -b stable/kilo https://code.csdn.net/openstack/glance.git
+~$ git clone -b stable/kilo https://code.csdn.net/openstack/horizon.git
+~$ git clone -b stable/kilo https://code.csdn.net/openstack/neutron.git
+~$ git clone -b stable/kilo https://code.csdn.net/openstack/keystone.git
+~$ git clone -b stable/kilo https://code.csdn.net/openstack/requirements.git
+```
+除了 OpenStack 的源码，我们还需要下载一个 noVNC 的源码，用于在浏览器中访问虚拟机的界面。
+```shell
+~$ git clone http://git.trystack.cn/kanaka/noVNC.git
+```
+按照下面的步骤下载完所有的源码后，同样建议将所有的源码备份一下。
+
+### 准备 DevStack 安装脚本的配置文件
+我们现在需要准备 DevStack 安装所使用的配置文件。这一步尤为重要，安装失败多半是这里出问题。
+在 devstack 目录下创建一个 local.conf 文件，在里面填入配置信息。
+```shell
+~$ cd ~/devstack/
+~$ gedit local.conf
+```
+在 local.conf 文件中填入以下内容，然后根据你的实际情况修改。
+```shell
+[[local|localrc]]
+SERVICE_TOKEN=abcdefg
+ADMIN_PASSWORD=pass
+MYSQL_PASSWORD=pass
+RABBIT_PASSWORD=pass
+SERVICE_PASSWORD=$ADMIN_PASSWORD
+
+HOST_IP=192.168.100.12
+SERVICE_HOST=192.168.100.12
+MYSQL_HOST=192.168.100.12
+RABBIT_HOST=192.168.100.12
+GLANCE_HOSTPORT=192.168.100.12:9292
+
+LOGFILE=$DEST/logs/stack.sh.log
+
+LOGDAYS=2
+
+SWIFT_HASH=66a3d6b56c1f479c8b4e70ab5c2000f5
+
+SWIFT_REPLICAS=1
+
+SWIFT_DATA_DIR=$DEST/data
+
+disable_service n-net
+enable_service q-svc
+enable_service q-agt
+enable_service q-dhcp
+enable_service q-l3
+enable_service q-meta
+enable_service neutron
+enable_service n-novnc
+enable_service n-cauth
+enable_service q-metering
+#enable_service q-lbaas
+#enable_service q-fwaas
+
+disable_service tempest
+
+#Neutron options
+Q_USE_SECGROUP=True
+Q_L3_ENABLED=True
+FLOATING_RANGE="192.168.100.0/24"
+FIXED_RANGE="10.0.0.0/24"
+Q_FLOATING_ALLOCATION_POOL=start=192.168.100.200,end=192.168.100.254
+PUBLIC_NETWORK_GATEWAY="192.168.100.1"
+PUBLIC_INTERFACE=eth0
+
+#Open vSwitch provider networking configuration
+Q_USE_PROVIDERNET_FOR_PUBLIC=True
+OVS_PHYSICAL_BRIDGE=br-ex
+PUBLIC_BRIDGE=br-ex
+OVS_BRIDGE_MAPPINGS=public:br-ex
+
+#VLAN configuration
+Q_PLUGIN=ml2
+ENABLE_TENANT_VLANS=True
+
+GIT_BASE=https://code.csdn.net
+NOVNC_REPO=http://git.trystack.cn/kanaka/noVNC.git
+SPICE_REPO=http://git.trystack.cn/git/spice/spice-html5.git
+
+#OFFLINE=True
+```
