@@ -256,3 +256,55 @@ SPICE_REPO=http://git.trystack.cn/git/spice/spice-html5.git
 
 #OFFLINE=True
 ```
+### 配置文件内容说明
+接下来依次说明以上内容的意义。没提到的内容保持原样就行。
+#### 密码
+>ADMIN_PASSWORD=pass  
+>MYSQL_PASSWORD=pass  
+>RABBIT_PASSWORD=pass  
+>SERVICE_PASSWORD=$ADMIN_PASSWORD  
+
+这几个是密码设置，DevStack 在安装成功后会创建两个用户，用户的登录密码就是这里的密码。这里我将它简单的设为 pass，你可以改成自己想要设置。
+#### IP
+>HOST_IP=192.168.100.12  
+>SERVICE_HOST=192.168.100.12  
+>MYSQL_HOST=192.168.100.12  
+>RABBIT_HOST=192.168.100.12  
+>GLANCE_HOSTPORT=192.168.100.12:9292  
+
+这里主机 IP 设置，和各个服务的 IP 设置。我安装时的主机 IP 为 192.168.100.12，所以我填的是 192.168.100.12。你必须都将其改成你在局域网中为主机所分配的 IP 就行（前面准备工作中让你给电脑主机分配一个固定的 IP 地址正是此意）。
+ 
+ #### 固定 IP 和浮动 IP
+>FLOATING_RANGE="192.168.100.0/24"  
+>FIXED_RANGE="10.0.0.0/24"  
+>Q_FLOATING_ALLOCATION_POOL=start=192.168.100.200,end=192.168.100.254  
+>PUBLIC_NETWORK_GATEWAY="192.168.100.1"  
+>PUBLIC_INTERFACE=eth0
+
+OpenStack 中的固定 IP 是分配给虚拟机的私网 IP，只能用于虚拟机所在的私网使用，从虚拟机启动到关机一直不变。浮动 IP 是动态分配的，虚拟机用来访问外网所使用。
+
+FLOATING\_RANGE 用于设置浮动 IP 的范围，设置为你主机所在局域网的网段。比如我安装时主机所在的网段为 192.168.100.0/24。
+
+Q\_FLOATING\_ALLOCATION\_POOL 是分配给虚拟机的浮动 IP 范围。在前面的准备工作中我们在局域网中预留一段 IP 范围给虚拟机，填到这里就行。比如我预留的浮动 IP 段为 192.168.100.200~192.168.100.254。
+
+FIXED_RANGE 是虚拟机固定 IP 的网段。设为 10.0.0.0/24 就行。
+
+PUBLIC\_NETWORK\_GATEWAY 是默认网关，即主机所在局域网的网关地址，通常是你主机所连接到的路由器或交换机的 IP 地址。比如本人主机连接到的路由器 IP 地址为 192.168.100.1，所以我将其设置为 192.168.100.1。如果你的路由器或交换机的 IP 地址为 192.168.100.2，你就将其设为 192.168.100.3。
+
+PUBLIC_INTERFACE 是主机连接所在局域网时所使用的网卡，这里我使用的是 eth0。
+
+#### 组件源码地址
+>GIT_BASE=https://code.csdn.net  
+>NOVNC_REPO=http://git.trystack.cn/kanaka/noVNC.git  
+>SPICE_REPO=http://git.trystack.cn/git/spice/spice-html5.git
+
+GIT_BASE 是 DevStack 下载 OpenStack 各组件源码的地址。虽然我们已经手动下载了各组件的源码，但为了以防还要下载其他源码，这里将下载地址设为国内的镜像地址。
+
+NOVNC\_REPO 是 noVNC 源码地址。
+
+SPICE\_REPO 是 Horizon 组件所使用到的 spice 。
+
+#### OFFLINE
+>#OFFLINE=True
+
+OFFLINE 用于设置离线模式。未完成安装之前将其注释掉就行。在安装完成后，如果你修改了配置，重新运行安装脚本时将 OFFLINE=True 前面的注释去掉，可以避免重复从网上下载已有的东西。
