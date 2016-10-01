@@ -90,7 +90,7 @@ sudo pip install --upgrade os-testr
 ```shell
 ~$ cd ~
 ~$ git clone https://git.oschina.net/shimachao/elijah-provisioning.git
-~$ git clone https://git.oschina.net/shimachao/devstack.git
+~$ git clone -b stable/kilo https://git.oschina.net/shimachao/devstack.git
 ~$ git clone https://git.oschina.net/shimachao/elijah-openstack.git
 ```
 第一个 elijah-provisioning 源码仓库包含和 BaseVM 相关的一些工具和 Cloudlet 用到的库。
