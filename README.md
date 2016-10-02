@@ -18,7 +18,7 @@
 ## 准备好软件环境
 1. 替换 Ubuntu 软件源
 
-由于安装过程中需要到 Ubuntu 软件仓库下载大量的软件包，Ubuntu 系统默认的软件源在国外，往往会因为网速问题而导致失败。所以我们可以将 Ubuntu 的软件源替换为国内源。如果你所在的局域网环境搭建好了自己的 Ubuntu 源就更好了。我所在的环境离西电开源社区的软件源更近，所以下面以西电开源社区的源为例来说明。
+由于安装过程中需要到 Ubuntu 软件仓库下载大量的软件包，Ubuntu 系统默认的官方软件源在国外，往往会因为网速问题而导致失败。所以我们可以将 Ubuntu 的软件源替换为国内源。如果你所在的局域网环境搭建好了自己的 Ubuntu 源就更好了。我所在的环境离西电开源社区的软件源更近，所以下面以西电开源社区的源为例来说明。
 编辑 /etc/apt/sources.list
 ```shell
 $ sudo gedit /etc/apt/sources.list
@@ -36,7 +36,7 @@ deb-src http://ftp.xdlinux.info/ubuntu/ trusty-updates main restricted universe 
 deb-src http://ftp.xdlinux.info/ubuntu/ trusty-proposed main restricted universe multiverse
 deb-src http://ftp.xdlinux.info/ubuntu/ trusty-backports main restricted universe multiverse
 ```
-你也可以选择清华大学的软件源、163源、阿里源等国内源。
+这里仅以西电开源社区的源为例，你也可以选择清华大学的软件源、163源、阿里源等国内源。
 
 2. 同步软件源并更新系统
 
