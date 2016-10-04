@@ -147,6 +147,7 @@ OpenStack 的安装是整个过程中最复杂的一步。必须的严格按照�
 ```shell
  $ cd ~
  $ cd devstack
+ $ git checkout stable/kilo
  $ gedit tools/install_pip.sh
 ```
 将 tools/install_pip.sh 文件中的第 97 行、99 行、105 行注释掉。这几行是在升级 pip，速度特别慢，通常会出现超时错误，所以我们将其注释掉。而且 升级 pip 的事我们已经在前面的准备工作中做过了。
