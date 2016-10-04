@@ -417,3 +417,130 @@ nova-compute     chao-Y470                            nova             enabled  
 ![cloudlet 扩展](./screenshot/cloudlet.png)
 
 至此，我们的整个安装总算完成了。
+
+# 制作 Base VM 和 VM overlay
+前面安装的 elijah-provisioning 提供了制作 base VM 和 VM overlay 的工具。我们可以用来制作自己的 base VM 和 VM overlay。由于原作者提供的验证程序运行在 Ubuntu-12.04.1-i386-Server 系统上，我们就以 Ubuntu-12.04.1-i386-Server 系统为例来制作一个 base VM。并以原作者提供的流体模拟程序为例，制作一个 VM overlay。
+
+## 制作 Base VM
+### 1. 创建磁盘镜像
+制作 base VM 之前，我们需要一个已经安装好系统的磁盘镜像。
+```shell
+$ qemu-img create -f raw ubuntu12.04.img 8G
+```
+Cloudlet 提供的制作 base VM 和 VM overlay 的工具只支持 raw 镜像格式。所以我们创建了一个 8G 的 raw 格式镜像文件。
+
+### 2. 安装系统
+```shell
+$ qemu-system-i386 -m 2048 --enable-kvm -had ./ubuntu12.04.img -cdrom ./ubuntu-12.04.1-server-i386.iso
+```
+运行这条命令会弹出一个对话框，在里面完成系统的安装。注意安装过程中有一步需要选择要安装的软件包，一定要把 OpenSSH server 选上。
+
+### 3. 制作 Base VM
+利用刚才制作的虚拟磁盘镜像，开始制作 base VM。
+```shell
+$ cloudlet base ./ubuntu12.04.img
+```
+该命令会弹出一个窗口，启动磁盘镜像里的系统。你可以在里面完成一些你认为必要的操作（你认为可以保留到 base VM 里面的状态），然后关闭该窗口。在你关闭窗口后，制作 base VM 的过程才正式开始，cloudlet base 会将刚才启动的系统里面的状态（包括磁盘和内存状态）快照并保存下来。这个过程可能需要一段时间，请耐心等待。
+完成后的输出如下。
+```
+100%INFO     Finish Base VM Disk hashing
+Base VM is created from ubuntu12.04.img
+Disk: /home/chao/12.04test/ubuntu12.04.img
+Mem: /home/chao/12.04test/ubuntu12.04.base-mem
+```
+可以在当前目录下看到，cloudlet base 命令创建的四个文件。
+```
+$ ls
+ubuntu12.04.base-hash      ubuntu12.04.base-mem       ubuntu12.04.img
+ubuntu12.04.base-img-meta  ubuntu12.04.base-mem-meta  ubuntu12.04.zip
+```
+
+### 4. 导出 Base VM
+```shell
+$ cloudlet export-base ./ubuntu12.04.img ubuntu12.04
+INFO     Start compressing
+INFO     zip -j -9 ./ubuntu12.04.zip ubuntu12.04.img ubuntu12.04.base-mem ubuntu12.04.base-img-meta ubuntu12.04.base-mem-meta
+  adding: ubuntu12.04.img (deflated 97%)
+  adding: ubuntu12.04.base-mem (deflated 95%)
+  adding: ubuntu12.04.base-img-meta (deflated 13%)
+  adding: ubuntu12.04.base-mem-meta (deflated 84%)
+$ ls
+ubuntu12.04.base-hash      ubuntu12.04.base-mem       ubuntu12.04.img
+ubuntu12.04.base-img-meta  ubuntu12.04.base-mem-meta  ubuntu12.04.zip
+```
+根据该命令输出，我们可以看到生成了一个 ubuntu12.04.zip 文件，该文件就代表我们制作的 base VM，可用于导入到其他平台使用。后面我们使用 OpenStack 的 Cloudlet 扩展做实验时会用到该 zip 文件。
+
+## 制作 VM overlay
+现在在之前 base VM 的基础上制作 overlay。
+### 1. 开始制作
+```shell
+$ cloudlet overlay ./ubuntu12.04.img -- -redir tcp:2222:22 -redir tcp:9093::9093
+```
+该命令会再次启动磁盘镜像并弹出虚拟机窗口，我们在其中做完必要的操作后关闭窗口，制作 VM overlay 的过程就开始了。-redir tcp:2222::22 表示把宿主机的 TCP 2222号端口z转发到虚拟机的 TCP 22 号端口。因为我们要用 ssh 命令远程登录虚拟机，并安装流体模拟程序。而虚拟机上 SSH 服务监听的端口正是22号端口，所以将宿主机的2222号端口转发为虚拟机的22号端口。另外流体模拟程序需要监听9093号端口，所以我们也将宿主机的9093号端口转发为虚拟机的9093号端口，便于流体模拟程序连接。
+
+### 2. 在虚拟机中安装程序
+#### 2.1 __传输安装程序包到虚拟机中__
+
+在宿主机中通过 scp 命令将流体模拟程序传输到虚拟机中。
+```shell
+$ scp -P 2222 -r ~/fluid-bin32 chao@127.0.0.1:~/
+```
+#### 2.2 __安装__
+
+以下操作在虚拟机窗口中完成。
+```shell
+# 安装
+~$ ls
+fluid-bin32
+~$ cd fluid-bin32/
+/fluid-bin32$ ls
+CREDITS  cloudlet_test  lib-download  libn7physics.so
+README   install        libn7core.so
+~/fluid-bin32$ ls -l
+total 1456
+-rw-r--r-- 1 chao chao     143 Oct  4 16:09 CREDITS
+-rw-r--r-- 1 chao chao    1127 Oct  4 16:09 README
+-rwxr-xr-x 1 chao chao   39106 Oct  4 16:09 cloudlet_test
+-rwxr-xr-x 1 chao chao     113 Oct  4 16:09 install
+drwx------ 2 chao chao    4096 Oct  4 16:09 lib-download
+-rw-r--r-- 1 chao chao  225570 Oct  4 16:09 libn7core.so
+-rw-r--r-- 1 chao chao 1204106 Oct  4 16:09 libn7physics.so
+~/fluid-bin32$ ./install 
+[sudo] password for chao: 
+Selecting previously unselected package libgomp1.
+(Reading database ... 26373 files and directories currently installed.)
+Unpacking libgomp1 (from libgomp1_4.6.3-1ubuntu5_i386.deb) ...
+Setting up libgomp1 (4.6.3-1ubuntu5) ...
+Processing triggers for libc-bin ...
+ldconfig deferred processing now taking place
+# 将当前目录路径添加到 /etc/ld.so.conf 最后一行
+# ...
+# 删除不需要的文件
+~/fluid-bin32$ sudo rm CREDITS README install
+~/fluid-bin32$ sudo rm -rf lib-download
+```
+### 3. __在虚拟机中启动程序__
+接着上面的操作
+```shell
+$ ./cloudlet_test
+```
+程序便启动起来了。
+
+### 4. 完成
+这时关闭虚拟机窗口。制作 VM overlay 的过程便正式开始了。
+过一段时间后会看到如下输出。
+```
+meta)
+DEBUG    Overlay Compression time: 2.791376, delta_item: 11466
+DEBUG    Total Overlay Size : 6064072
+INFO     close Stream monitoring thread
+INFO     Fuse close pipe
+INFO     NO chunks has been waited at FUSE
+INFO     close Fuse Exec thread
+INFO     close File monitoring thread
+meta file : (56261) bytes
+blob file : (6064072) bytes (overlay-blob_1.xz)
+zip overhead : (251) bytes
+overlay file at : /tmp/cloudlet-overlay-nTCqNQ/overlay.zip
+```
+可以看到生成的 overlay 文件保存在 /tmp/cloudlet-overlay-nTCqNQ/overlay.zip。前面生成的 ubuntu12.04.zip 文件和这个 overlay.zip 文件就是我们要的 base VM 和 VM overlay，必须保存好，后面实验要用。
