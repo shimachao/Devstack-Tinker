@@ -419,7 +419,7 @@ nova-compute     chao-Y470                            nova             enabled  
 至此，我们的整个安装总算完成了。
 
 # 制作 Base VM 和 VM overlay
-前面安装的 elijah-provisioning 提供了制作 base VM 和 VM overlay 的工具。我们可以用来制作自己的 base VM 和 VM overlay。由于原作者提供的验证程序运行在 Ubuntu-12.04.1-i386-Server 系统上，我们就以 Ubuntu-12.04.1-i386-Server 系统为例来制作一个 base VM。并以原作者提供的流体模拟程序为例，制作一个 VM overlay。
+前面安装的 elijah-provisioning 提供了制作 base VM 和 VM overlay 的工具。我们可以用来制作自己的 base VM 和 VM overlay。由于原作者提供的验证程序运行在 Ubuntu-12.04.1-i386-Server 系统上，我们就以 Ubuntu-12.04.1-i386-Server 系统为例来制作一个 base VM。并以原作者提供的流体模拟程序为例，制作一个 VM overlay。在进行下面的过程之前请先准备好一个 ubuntu-12.04.1-server-i386 的安装镜像，原作者提供的流体模拟程序安装包 fluid-bin32。
 
 ## 制作 Base VM
 ### 1. 创建磁盘镜像
@@ -545,3 +545,6 @@ zip overhead : (251) bytes
 overlay file at : /tmp/cloudlet-overlay-nTCqNQ/overlay.zip
 ```
 可以看到生成的 overlay 文件保存在 /tmp/cloudlet-overlay-nTCqNQ/overlay.zip。前面生成的 ubuntu12.04.zip 文件和这个 overlay.zip 文件就是我们要的 base VM 和 VM overlay，必须保存好，后面实验要用。
+
+# 合成实验
+
