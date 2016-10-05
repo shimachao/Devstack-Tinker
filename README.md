@@ -307,7 +307,7 @@ OpenStack 中的固定 IP 是分配给虚拟机的私网 IP，只能用于虚拟
 **SPICE\_REPO** 是 Horizon 组件所使用到的 spice 。
 
 #### OFFLINE
->#OFFLINE=True
+> \#OFFLINE=True
 
 **OFFLINE** 用于设置离线模式。未完成安装之前将其注释掉就行。在安装完成后，如果你修改了配置，重新运行安装脚本时将 OFFLINE=True 前面的注释去掉，可以避免重复从网上下载已有的东西。
 
