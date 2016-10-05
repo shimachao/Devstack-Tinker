@@ -193,7 +193,7 @@ $ git clone http://git.trystack.cn/kanaka/noVNC.git
 $ cd ~/devstack/
 $ gedit local.conf
 ```
-在 local.conf 文件中填入以下内容，然后根据你的实际情况修改。
+在 local.conf 文件中填入以下内容，然后根据你的实际情况和后面[配置文件内容说明](#配置文件内容说明)修改。
 ```shell
 [[local|localrc]]
 SERVICE_TOKEN=abcdefg
