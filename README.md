@@ -392,7 +392,7 @@ $ ./unstack.sh
 $ ./rejoin-stack.sh
 ```
 unstack.sh 会停止所有和 OpenStack 相关的服务进程。rejoin-stack.sh 则会重新启动它们。
-根据我的经验，你还需要另开两个终端重启 apache2 和 keystone-all 服务
+根据我的安装经验，你可能还需要另开两个终端重启 apache2 和 keystone-all 服务
 ```shell
 $ service apache2 start
 $ keystone-all
