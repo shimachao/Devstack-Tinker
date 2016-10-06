@@ -160,10 +160,10 @@ DevStack 会默认将下载到的 OpenStack 源码包放在 /opt/stack 目录下
 ```shell
 $ cd /opt
 $ sudo mkdir stack
-$ chmod 755 stack
+$ chmod 777 stack
 $ ls -l
 total 4
-drwxr-xr-x 2 root root 4096 10月  1 09:35 stack
+drwxrwxrwx 2 root root 4096 10月  1 09:35 stack
 ```
 上面的命令创建了 /opt/stack 目录，并修改目录的权限，确保你的输出和上面类似。
 
