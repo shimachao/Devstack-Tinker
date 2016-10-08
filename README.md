@@ -546,5 +546,44 @@ overlay file at : /tmp/cloudlet-overlay-nTCqNQ/overlay.zip
 ```
 可以看到生成的 overlay 文件保存在 /tmp/cloudlet-overlay-nTCqNQ/overlay.zip。前面生成的 ubuntu12.04.zip 文件和这个 overlay.zip 文件就是我们要的 base VM 和 VM overlay，必须保存好，后面实验要用。
 
-# 合成实验
+# 合成实验演示
+Cloudlet 创建 Base VM、VM overlay、合成实例的功能都可以通过命令行工具来演示。其中创建 VM overlay、合成实例的功能还可以在 安装了 Cloudlet 扩展的 OpenStack 平台上演示。下面分别讲解。
 
+## 利用命令行工具演示
+以下操作的工作目录为前面制作 base VM 和 VM overlay 时的目录。
+### 导入 Base VM
+如果你安装前面的步骤在同一台主机上制作了 base VM 可以跳过该步骤，不用导入。因我制作 base VM 的过程中已自动导入。
+```shell
+$ cloudlet import-base ./ubuntu12.04.zip
+```
+### 验证已导入的 base VM
+```shell
+$ cloudlet list-base
+```
+会输出当前已导入成功的 base VM 信息。
+
+### 直接合成
+cloudlet 提供命令行工具可以直接手动指定 base VM 和对应的 VM overlay 来合成一个实例。
+```shell
+$ cloudlet synthesis ./ubuntu12.04.img ./overlay.zip
+```
+上面的命令将利用 ubuntu12.04.img 和 overlay.zip，以及 ubuntu12.04.img 同目录下的 meta 文件信息合成一个虚拟机实例。实例的状态就是之前我们制作 overlay 时状态。实例效果如下所示。
+![合成效果](./screenshot/synthesis01.png)
+
+### 服务端监听合成
+还可以开启一个服务监听来自客户端的请求。服务端收到客户端发送过来的 overlay 文件，动态合成实例。
+**开启服务端**
+```shell
+$ synthesis_server
+```
+**命令行客户端**
+```shell
+$ synthesis_client ./overlay.zip
+```
+synthesis_client 会读取 overlay.zip 发送给正在监听的服务端。虽然客户端和服务端都在本地，但也有发送的过程。看到的效果应该和之前的一样。
+
+**安卓客户端**
+
+原作者项目仓库中提供了一个测试用的安卓 APP 源码。我们将其中的 IP 地址改为主机的 IP 后编译产生一个 APK，该 APK 名为 Cloulet。在手机上安装 Cloudlet APK。在手机存储设备上创建一个 Cloudlet/overlay/fluid/ 目录。并将 overlay.zip 解压产生的两个文件放到 Cloudlet/overlay/fluid/ 目录下。
+保持主机上的 synthesis_server 开启。运行手机上的 Cloudlet APP。你会看到主机上动态合成了一个虚拟机实例。手机这边 Cloudlet APP 弹出一个流体模拟程序。并且该流体程序连接上了主机上虚拟机实例中的服务端。
+[演示效果](./video/1474818224392.mp4)
