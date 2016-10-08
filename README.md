@@ -431,7 +431,7 @@ Cloudlet 提供的制作 base VM 和 VM overlay 的工具只支持 raw 镜像格
 
 ### 2. 安装系统
 ```shell
-$ qemu-system-i386 -m 2048 --enable-kvm -had ./ubuntu12.04.img -cdrom ./ubuntu-12.04.1-server-i386.iso
+$ qemu-system-i386 -m 2048 --enable-kvm -hda ./ubuntu12.04.img -cdrom ./ubuntu-12.04.1-server-i386.iso
 ```
 运行这条命令会弹出一个对话框，在里面完成系统的安装。注意安装过程中有一步需要选择要安装的软件包，一定要把 OpenSSH server 选上。
 
