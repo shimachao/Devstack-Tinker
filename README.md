@@ -35,7 +35,7 @@ deb-src http://ftp.xdlinux.info/ubuntu/ trusty-updates main restricted universe 
 deb-src http://ftp.xdlinux.info/ubuntu/ trusty-proposed main restricted universe multiverse
 deb-src http://ftp.xdlinux.info/ubuntu/ trusty-backports main restricted universe multiverse
 ```
-这里仅以西电开源社区的源为例，你也可以选择清华大学的软件源、163源、阿里源等国内源。
+这里仅以西电开源社区的源为例，你也可以选择清华大学、中科大、163、阿里等国内源。（西电的源不稳定，且只有在西电校内可以访问，强烈不建议用西电的源）
 
 2. 同步软件源并更新系统
 
