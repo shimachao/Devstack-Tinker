@@ -9,7 +9,7 @@
 - 将电脑主机连接到局域网中，并为其分配固定的 IP 地址。
 - 在局域网内预留一段 IP 地址给供后面测试用。
 
-电脑主机最好 4G 以上内存、多核 CPU、固态硬盘、两块网卡。本人在一台 4G 内存的 ThinkPad E40 笔记本上安装好 OpenStack 后，刚运行起来就卡死了。所以内存必须得 4G 以上。固态硬盘是为了加快安装系统和软件的速度。至于双网卡是为了后面网络设置方便。只有一张网卡也行。
+电脑主机最好 4G 以上内存、多核 CPU、固态硬盘、两块网卡。本人曾在一台 4G 内存的 ThinkPad E40 笔记本上安装好 OpenStack 后，刚运行起来就卡死了。所以内存必须得 4G 以上。固态硬盘是为了加快安装系统和软件的速度。至于双网卡是为了后面网络设置方便。只有一张网卡也行。
 
 ## 准备好操作系统
 在电脑主机上安装好 Ubuntu 14.04 LTS x64，可以是桌面版，也可以是服务器版，本人安装的是桌面版。Cloudlet 依赖于 Ubuntu 提供的一些软件包，所以必须在 Ubuntu 上安装。而且原作者只在 Ubuntu 14.04 x64 上做了测试。
@@ -86,7 +86,7 @@ $ git clone https://github.com/cmusatyalab/elijah-provisioning
 $ git clone -b stable/kilo https://github.com/openstack-dev/devstack
 $ git clone https://github.com/cmusatyalab/elijah-openstack
 ```
-本人将上面上个源码仓库备份到国内网站上。如果以上下载地址失效或网速有问题，你也可以到本人下面的备份地址下载：
+本人将上面三个源码仓库备份到国内网站上。如果以上下载地址失效或网速有问题，你也可以到本人下面的备份地址下载：
 ```shell
 $ cd ~
 $ git clone https://git.oschina.net/shimachao/elijah-provisioning.git
